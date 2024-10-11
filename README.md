@@ -1,6 +1,6 @@
 # Rodauth OpenAPI
 
-Generates [OpenAPI] documentation for your Rodauth endpoints.
+Generate [OpenAPI] documentation for your Rodauth endpoints.
 
 ## Installation
 
