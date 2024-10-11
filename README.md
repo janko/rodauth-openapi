@@ -1,34 +1,67 @@
-# Rodauth::Openapi
+# Rodauth OpenAPI
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rodauth/openapi`. To experiment with that code, run `bin/console` for an interactive prompt.
+Generates [OpenAPI] documentation for your Rodauth endpoints.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```sh
+bundle add rodauth-openapi --group development
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+The generated OpenAPI documentation can be uploaded to renderers such as [Swagger Editor] or [Redoc].
 
-## Development
+### Rails
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Assuming you have Rodauth installed in your Rails application, you can use the generator provided by this gem:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```sh
+rails g rodauth:openapi
+```
 
-## Contributing
+This will generate OpenAPI documentation in YAML format for the default Rodauth configuration and print it to standard output.
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/janko/rodauth-openapi. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/janko/rodauth-openapi/blob/main/CODE_OF_CONDUCT.md).
+The generator accepts the following options:
+
+```sh
+rails g rodauth:openapi --name admin # secondary configuration
+rails g rodauth:openapi --format json # JSON format
+rails g rodauth:openapi --json # generate JSON API endpoints
+rails g rodauth:openapi --no-password # assume account without password
+rails g rodauth:openapi --save openapi.yml # save to a file
+```
+
+### Outside of Rails
+
+If you're not using Rails, you can generate the OpenAPI documentation programmatically:
+
+```rb
+require "rodauth/openapi"
+
+auth_class = RodauthApp.rodauth # or RodauthApp.rodauth(:admin)
+open_api = Rodauth::OpenAPI.new(auth_class)
+
+File.write("openapi.yml", open_api.to_yaml)
+```
+
+To generate JSON API endpoints:
+
+```rb
+Roduath::OpenAPI.new(auth_class, json: true)
+```
+
+To assume the account doesn't have a password:
+
+```rb
+Roduath::OpenAPI.new(auth_class, password: false)
+```
+
+To generate the documentation in JSON format:
+
+```rb
+Roduath::OpenAPI.new(auth_class).to_json
+```
 
 ## License
 
@@ -37,3 +70,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Rodauth::Openapi project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/janko/rodauth-openapi/blob/main/CODE_OF_CONDUCT.md).
+
+[OpenAPI]: https://swagger.io/specification/
+[Swagger Editor]: https://editor.swagger.io/
+[Redoc]: https://redocly.github.io/redoc/
