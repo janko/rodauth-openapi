@@ -12,7 +12,7 @@ bundle add rodauth-openapi --group development
 
 The generated OpenAPI documentation can be uploaded to renderers such as [Swagger Editor] or [Redoc].
 
-### Rails
+### In Rails
 
 Assuming you have Rodauth installed in your Rails application, you can use the generator provided by this gem:
 
