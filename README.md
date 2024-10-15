@@ -45,22 +45,15 @@ open_api = Rodauth::OpenAPI.new(auth_class)
 File.write("openapi.yml", open_api.to_yaml)
 ```
 
-To generate JSON API endpoints:
+Here are the various options and methods supported:
 
 ```rb
-Roduath::OpenAPI.new(auth_class, json: true)
-```
+Rodauth::OpenAPI.new(auth_class, json: true) # generate JSON API endpoints
+Rodauth::OpenAPI.new(auth_class, password: false) # assume account has no password
 
-To assume the account doesn't have a password:
-
-```rb
-Roduath::OpenAPI.new(auth_class, password: false)
-```
-
-To generate the documentation in JSON format:
-
-```rb
-Roduath::OpenAPI.new(auth_class).to_json
+Rodauth::OpenAPI.new(auth_class).to_yaml # YAML format
+Rodauth::OpenAPI.new(auth_class).to_json # JSON format
+Rodauth::OpenAPI.new(auth_class).generate # ruby hash
 ```
 
 ## License
