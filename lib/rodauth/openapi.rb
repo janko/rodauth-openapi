@@ -5,6 +5,8 @@ require "rodauth/openapi/routes"
 
 module Rodauth
   class OpenAPI
+    Error = Class.new(StandardError)
+
     DOCS_URL = "https://rodauth.jeremyevans.net/documentation.html"
     SPEC_VERSION = "3.0.1"
 
@@ -23,6 +25,10 @@ module Rodauth
     end
 
     def generate
+      if json? && !rodauth.features.include?(:json)
+        fail Error, "JSON API documentation was requested, but JSON feature is not enabled"
+      end
+
       data = {
         openapi: SPEC_VERSION,
         info: {

@@ -30,6 +30,8 @@ module Rodauth
         else
           puts documentation
         end
+      rescue Rodauth::OpenAPI::Error => error
+        say error.message, :red
       end
 
       private
