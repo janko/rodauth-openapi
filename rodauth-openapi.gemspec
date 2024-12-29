@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "rodauth-openapi"
-  spec.version       = "0.1.1"
+  spec.version       = "0.2.0"
   spec.authors       = ["Janko Marohnić"]
   spec.email         = ["janko.marohnic@gmail.com"]
 
