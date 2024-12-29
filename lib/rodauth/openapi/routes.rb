@@ -46,6 +46,15 @@ module Rodauth
         data[:paths][path][verb] = {
           tags: [tag],
           summary: summary,
+          description: <<~MARKDOWN,
+            ```ruby
+            #{rodauth_invocation}.#{name}_route #=> "#{rodauth.send(:"#{name}_route")}"
+            #{rodauth_invocation}.#{name}_path #=> "#{path}"
+            #{rodauth_invocation}.#{name}_url #=> "https://example.com#{path}"
+
+            #{rodauth_invocation}.current_route #=> :#{name} (in the request)
+            ```
+          MARKDOWN
           responses: {},
           parameters: [],
         }
@@ -54,7 +63,8 @@ module Rodauth
       end
 
       def description(text)
-        data[:paths].values.last.values.last[:description] = text
+        path = data[:paths].values.last.values.last
+        path[:description] = [path[:description], text].compact.join("\n")
       end
 
       def param(name, description, type:, example: nil, required: false, enum: nil)
@@ -123,6 +133,14 @@ module Rodauth
 
       def feature?(name)
         rodauth.features.include?(name)
+      end
+
+      def rodauth_invocation
+        if rodauth.class.configuration_name
+          "rodauth(:#{rodauth.class.configuration_name})"
+        else
+          "rodauth"
+        end
       end
     end
   end
