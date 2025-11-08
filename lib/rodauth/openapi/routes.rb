@@ -91,8 +91,41 @@ module Rodauth
         response(200, description)
       end
 
-      def json_response(description = "", example)
-        response(200, description, content: { "application/json" => { example: example } })
+      def json_response(description = "", example, schema: nil)
+        response(200, description, content: {
+          "application/json" => {
+            schema: schema || infer_schema(example),
+            example: example
+          }
+        })
+      end
+
+      def infer_schema(value)
+        case value
+        when Hash
+          {
+            type: "object",
+            properties: value.transform_values { |v| infer_schema(v) }
+          }
+        when Array
+          if value.empty?
+            { type: "array", items: { type: "string" } }
+          else
+            { type: "array", items: infer_schema(value.first) }
+          end
+        when String
+          { type: "string" }
+        when Integer
+          { type: "integer" }
+        when Float
+          { type: "number" }
+        when TrueClass, FalseClass
+          { type: "boolean" }
+        when NilClass
+          { type: "string", nullable: true }
+        else
+          { type: "string" }
+        end
       end
 
       def success_response(description)
